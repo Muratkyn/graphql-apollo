@@ -35,12 +35,37 @@ const resolvers = {
       return reviews.filter((review) => review.author_id === parent.id);
     },
   },
-  Reviews: {
+  Review: {
     game(parent) {
       return games.filter((game) => game.id === parent.game_id);
     },
     author(parent) {
       return authors.filter((author) => author.id === parent.author_id);
+    },
+  },
+  Mutation: {
+    deleteGame(_, args) {
+      const foundIndex = games.findIndex((game) => game.id === args.id);
+      if (foundIndex && foundIndex !== -1) games.splice(foundIndex, 1);
+      return games;
+    },
+    addGame(_, args) {
+      let game = {
+        ...args.game,
+        id: (games.length + 1).toString(),
+      };
+      games.push(game);
+
+      return game;
+    },
+    editGame(_, args) {
+      const index = games.findIndex( g => g.id === args.id)
+
+      let updatedGame = {
+        ...games[index],
+        ...args.edit
+      }
+      return updatedGame
     },
   },
 };
